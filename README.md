@@ -1,5 +1,27 @@
-# Vue 3 + Vite
+<img alt="image" src="https://github.com/user-attachments/assets/5417f063-6305-4c93-8835-518e52d9f22f" />
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Getting Started
+You can get started by cloning the project to your local machine. Make sure you have [Node.js](https://nodejs.org/) installed before you begin.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+1. Clone the repository:
+
+```bash
+git clone https://github.com/pavry/lift-plan
+```
+
+2. Navigate to the project folder:
+```bash
+cd lift-plan
+```
+
+3. Install the dependencies:
+```bash
+npm ci
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+Done! You have successfully run the website locally.
