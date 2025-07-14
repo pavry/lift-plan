@@ -253,7 +253,7 @@ export default {
           [
             { name: this.lifts.OH.name, sets: 4, reps: 4, percent: 80, estimate: oneRM.OH },
             { name: this.lifts.SQ.name, sets: 4, reps: 8, percent: 70, estimate: oneRM.SQ },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 10, percent: 65, estimate: e.value }))
+            ...this.assistanceA.map(e => ({ name: e.name, sets: 3, reps: 10, percent: 65, estimate: e.value }))
           ],
           [
             { name: this.lifts.DL.name, sets: 4, reps: 4, percent: 80, estimate: oneRM.DL },
