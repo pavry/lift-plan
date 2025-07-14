@@ -1,4 +1,5 @@
-<img alt="image" src="https://github.com/user-attachments/assets/5417f063-6305-4c93-8835-518e52d9f22f" />
+
+<img alt="demo" src="https://github.com/user-attachments/assets/2550536f-e1a9-40cc-b500-9dc674d44a4b" />
 
 ## Getting Started
 You can get started by cloning the project to your local machine. Make sure you have [Node.js](https://nodejs.org/) installed before you begin.
