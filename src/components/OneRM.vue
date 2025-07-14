@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label>Lifted Weight (kg)</label>
+    <label>Lifted Weight ({{ unit }})</label>
     <input v-model.number="weight" type="number" min="1" />
 
     <label>Repetitions</label>
@@ -8,13 +8,21 @@
 
     <button @click="calculate">Calculate</button>
 
-    <div class="output" v-if="output">{{ output }}</div>
+    <div class="output" v-if="output">
+      <pre>{{ output }}</pre>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   emits: ['set-title'],
+  props: {
+    unit: {
+      type: String,
+      default: 'kg'
+    }
+  },
   data() {
     return {
       weight: 100,
@@ -44,11 +52,11 @@ export default {
       const avg = results.reduce((acc, cur) => acc + cur.value, 0) / results.length
       const rounded = Math.round(avg / 5) * 5
 
-      this.output = `1RM for ${this.weight} kg x ${this.reps} reps:\n\n`
+      this.output = `1RM for ${this.weight} ${this.unit} x ${this.reps} reps:\n\n`
       results.forEach(r => {
-        this.output += `${r.name}: ${r.value.toFixed(1)} kg\n`
+        this.output += `${r.name}: ${r.value.toFixed(1)} ${this.unit}\n`
       })
-      this.output += `\nAverage: ${avg.toFixed(1)} → ${rounded} kg`
+      this.output += `\nAverage: ${avg.toFixed(1)} → ${rounded} ${this.unit}`
     }
   }
 }
