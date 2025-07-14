@@ -1,6 +1,6 @@
 # Lift Plan
 
-**Lift Plan** is a simple and customizable training planner built for strength programs like Zulu/HT. It runs entirely in your browser, stores your data locally, and supports installation as a **Progressive Web App (PWA)** — perfect for mobile or desktop.
+**Lift Plan** is a simple and customizable training planner built for strength programs like Hirvis or Zulu/HT program. It runs entirely in your browser, stores your data locally, and supports installation as a **Progressive Web App (PWA)** — perfect for mobile or desktop.
 
 ---
 
