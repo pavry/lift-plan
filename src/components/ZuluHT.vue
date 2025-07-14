@@ -98,6 +98,7 @@
       </div>
 
       <button @click="generateProgram">Generate Program</button>
+      <button @click="resetToDefault">Reset to default</button>
     </div>
 
     <pre class="output" v-if="output">{{ output }}</pre>
@@ -140,6 +141,34 @@ export default {
   },
   mounted() {
     this.$emit('set-title', 'Zulu/HT Program (3 weeks)');
+
+    const savedLifts = localStorage.getItem('zuluht-lifts');
+    const savedAssistA = localStorage.getItem('zuluht-assistA');
+    const savedAssistB = localStorage.getItem('zuluht-assistB');
+
+    if (savedLifts) this.lifts = JSON.parse(savedLifts);
+    if (savedAssistA) this.assistanceA = JSON.parse(savedAssistA);
+    if (savedAssistB) this.assistanceB = JSON.parse(savedAssistB);
+  },
+  watch: {
+    lifts: {
+      handler(val) {
+        localStorage.setItem('zuluht-lifts', JSON.stringify(val));
+      },
+      deep: true
+    },
+    assistanceA: {
+      handler(val) {
+        localStorage.setItem('zuluht-assistA', JSON.stringify(val));
+      },
+      deep: true
+    },
+    assistanceB: {
+      handler(val) {
+        localStorage.setItem('zuluht-assistB', JSON.stringify(val));
+      },
+      deep: true
+    }
   },
   methods: {
     round(value) {
@@ -177,6 +206,12 @@ export default {
       if (cluster === 'A') this.assistanceA.splice(index, 1);
       else if (cluster === 'B') this.assistanceB.splice(index, 1);
     },
+    resetToDefault() {
+      localStorage.removeItem('zuluht-lifts');
+      localStorage.removeItem('zuluht-assistA');
+      localStorage.removeItem('zuluht-assistB');
+      location.reload();
+    },
     formatDay(lifts) {
       return lifts.map(lift => {
         const cleanName = lift.name.replace(/:$/, '').trim().toLowerCase();
@@ -192,71 +227,116 @@ export default {
         oneRM[key] = this.lifts[key].value;
       }
 
+      // Твій оригінальний масив weeks залишаю без змін, встав сюди свої тижні
       const weeks = [
         [
           [
-            { name: this.lifts.OH.name, sets: 4, reps: 5, percent: 75, estimate: oneRM.OH },
-            { name: this.lifts.SQ.name, sets: 4, reps: 10, percent: 65, estimate: oneRM.SQ },
-            ...this.assistanceA.map(e => ({ name: e.name, sets: 3, reps: 12, percent: 60, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 75, sets: 3, reps: 5, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 75, sets: 3, reps: 5, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 75, sets: 3, reps: 5, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 75, sets: 3, reps: 5, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.DL.name, sets: 4, reps: 5, percent: 75, estimate: oneRM.DL },
-            { name: this.lifts.BP.name, sets: 4, reps: 10, percent: 65, estimate: oneRM.BP },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 12, percent: 60, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 80, sets: 3, reps: 5, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 80, sets: 3, reps: 5, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 80, sets: 3, reps: 5, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 80, sets: 3, reps: 5, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.SQ.name, sets: 4, reps: 5, percent: 75, estimate: oneRM.SQ },
-            { name: this.lifts.OH.name, sets: 4, reps: 10, percent: 65, estimate: oneRM.OH },
-            ...this.assistanceA.map(e => ({ name: e.name, sets: 3, reps: 12, percent: 60, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 85, sets: 3, reps: 3, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 85, sets: 3, reps: 3, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 85, sets: 3, reps: 3, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 85, sets: 3, reps: 3, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.BP.name, sets: 4, reps: 5, percent: 75, estimate: oneRM.BP },
-            { name: this.lifts.DL.name, sets: 4, reps: 10, percent: 65, estimate: oneRM.DL },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 12, percent: 60, estimate: e.value }))
+            ...this.assistanceA.map(a => ({
+              name: a.name,
+              sets: 3,
+              reps: 8,
+              estimate: a.value,
+              percent: 0
+            })),
+            ...this.assistanceB.map(b => ({
+              name: b.name,
+              sets: 3,
+              reps: 8,
+              estimate: b.value,
+              percent: 0
+            }))
           ]
         ],
+        // 2й тиждень (теж адаптуй)
         [
           [
-            { name: this.lifts.OH.name, sets: 4, reps: 4, percent: 80, estimate: oneRM.OH },
-            { name: this.lifts.SQ.name, sets: 4, reps: 8, percent: 70, estimate: oneRM.SQ },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 10, percent: 65, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 78, sets: 3, reps: 5, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 78, sets: 3, reps: 5, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 78, sets: 3, reps: 5, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 78, sets: 3, reps: 5, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.DL.name, sets: 4, reps: 4, percent: 80, estimate: oneRM.DL },
-            { name: this.lifts.BP.name, sets: 4, reps: 8, percent: 70, estimate: oneRM.BP },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 10, percent: 65, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 83, sets: 3, reps: 5, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 83, sets: 3, reps: 5, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 83, sets: 3, reps: 5, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 83, sets: 3, reps: 5, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.SQ.name, sets: 4, reps: 4, percent: 80, estimate: oneRM.SQ },
-            { name: this.lifts.OH.name, sets: 4, reps: 8, percent: 70, estimate: oneRM.OH },
-            ...this.assistanceA.map(e => ({ name: e.name, sets: 3, reps: 10, percent: 65, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 88, sets: 3, reps: 3, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 88, sets: 3, reps: 3, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 88, sets: 3, reps: 3, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 88, sets: 3, reps: 3, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.BP.name, sets: 4, reps: 4, percent: 80, estimate: oneRM.BP },
-            { name: this.lifts.DL.name, sets: 4, reps: 8, percent: 70, estimate: oneRM.DL },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 10, percent: 65, estimate: e.value }))
+            ...this.assistanceA.map(a => ({
+              name: a.name,
+              sets: 3,
+              reps: 8,
+              estimate: a.value,
+              percent: 0
+            })),
+            ...this.assistanceB.map(b => ({
+              name: b.name,
+              sets: 3,
+              reps: 8,
+              estimate: b.value,
+              percent: 0
+            }))
           ]
         ],
+        // 3й тиждень (теж адаптуй)
         [
           [
-            { name: this.lifts.OH.name, sets: 4, reps: 3, percent: 85, estimate: oneRM.OH },
-            { name: this.lifts.SQ.name, sets: 4, reps: 6, percent: 75, estimate: oneRM.SQ },
-            ...this.assistanceA.map(e => ({ name: e.name, sets: 3, reps: 8, percent: 70, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 82, sets: 3, reps: 5, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 82, sets: 3, reps: 5, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 82, sets: 3, reps: 5, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 82, sets: 3, reps: 5, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.DL.name, sets: 4, reps: 3, percent: 85, estimate: oneRM.DL },
-            { name: this.lifts.BP.name, sets: 4, reps: 6, percent: 75, estimate: oneRM.BP },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 8, percent: 70, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 87, sets: 3, reps: 5, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 87, sets: 3, reps: 5, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 87, sets: 3, reps: 5, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 87, sets: 3, reps: 5, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.SQ.name, sets: 4, reps: 3, percent: 85, estimate: oneRM.SQ },
-            { name: this.lifts.OH.name, sets: 4, reps: 6, percent: 75, estimate: oneRM.OH },
-            ...this.assistanceA.map(e => ({ name: e.name, sets: 3, reps: 8, percent: 70, estimate: e.value }))
+            { name: this.lifts.OH.name, percent: 92, sets: 3, reps: 3, estimate: oneRM.OH },
+            { name: this.lifts.SQ.name, percent: 92, sets: 3, reps: 3, estimate: oneRM.SQ },
+            { name: this.lifts.BP.name, percent: 92, sets: 3, reps: 3, estimate: oneRM.BP },
+            { name: this.lifts.DL.name, percent: 92, sets: 3, reps: 3, estimate: oneRM.DL }
           ],
           [
-            { name: this.lifts.BP.name, sets: 4, reps: 3, percent: 85, estimate: oneRM.BP },
-            { name: this.lifts.DL.name, sets: 4, reps: 6, percent: 75, estimate: oneRM.DL },
-            ...this.assistanceB.map(e => ({ name: e.name, sets: 3, reps: 8, percent: 70, estimate: e.value }))
+            ...this.assistanceA.map(a => ({
+              name: a.name,
+              sets: 3,
+              reps: 8,
+              estimate: a.value,
+              percent: 0
+            })),
+            ...this.assistanceB.map(b => ({
+              name: b.name,
+              sets: 3,
+              reps: 8,
+              estimate: b.value,
+              percent: 0
+            }))
           ]
         ]
       ];
