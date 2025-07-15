@@ -212,13 +212,17 @@ export default {
       localStorage.removeItem('zuluht-assistB');
       location.reload();
     },
-    formatDay(lifts) {
-      return lifts.map(lift => {
+    formatDay(lifts, weekIndex, dayIndex) {
+      return lifts.map((lift, idx) => {
         const cleanName = lift.name.replace(/:$/, '').trim().toLowerCase();
         const weight = this.round((lift.percent / 100) * lift.estimate);
-        return lift.estimate > 0
-          ? `  - ${cleanName}: ${weight}/${lift.sets}x${lift.reps}`
-          : `  - ${cleanName}: ${lift.sets}x${lift.reps}`;
+
+        const addPlus = (weekIndex === 2 && idx === 0); // Week 3 (index 2), first lift
+        const displayWeight = lift.estimate > 0 
+          ? `${weight}${addPlus ? '+' : ''}/${lift.sets}x${lift.reps}` 
+          : `${lift.sets}x${lift.reps}`;
+
+        return `  - ${cleanName}: ${displayWeight}`;
       }).join('\n');
     },
     generateProgram() {
@@ -300,7 +304,7 @@ export default {
         output += `Week ${i + 1}\n--------------------------\n`;
         const days = ['Mon', 'Tue', 'Thu', 'Fri'];
         weekDays.forEach((day, idx) => {
-          output += `${days[idx]}:\n${this.formatDay(day)}\n\n`;
+          output += `${days[idx]}:\n${this.formatDay(day, i, idx)}\n\n`;
         });
       });
 
